@@ -1,0 +1,9 @@
+FROM alpine:3.20.3
+
+RUN apk add --no-cache tidyhtml shellcheck
+
+WORKDIR /app
+COPY site/ site/
+COPY tests/ tests/
+
+CMD ["sh", "-c", "shellcheck tests/*.sh && sh tests/test_site.sh site"]
