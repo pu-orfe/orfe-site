@@ -16,6 +16,17 @@ Slidev decks must be built with their final folder as the base path, for example
 Copy the whole `dist/` output, including `public/` images such as `apps/` and `people/`,
 into that folder under `site/`. Then run the tests. They fail if any referenced file is missing.
 
+Slidev hides its own controls until the pointer moves near the bottom-left corner, so viewers often
+don't see that slides advance. Every hosted deck therefore loads `nav-hint.js` and `nav-hint.css`
+from its folder. These add previous/next buttons, a slide counter, and a short hint. Copy both files
+from an existing deck, set `TOTAL` in `nav-hint.js` to the slide count, and add these lines before
+`</head>` in the deck's `index.html` (the tests check for them):
+
+```html
+<link rel="stylesheet" href="/assets/downloads/presentations/<year>/<slug>/nav-hint.css">
+<script defer src="/assets/downloads/presentations/<year>/<slug>/nav-hint.js"></script>
+```
+
 Current decks:
 
 - OQDS Minor Open House (2026-11-11), mirrored with permission from the presenter's build at
