@@ -1,0 +1,1 @@
+function e(e){return!e||!e.startsWith(`/`)||e.startsWith(`//`)?e:`/assets/downloads/presentations/2026/oqds-open-house-b641b2b5/`.replace(/\/$/,``)+e}export{e as t};

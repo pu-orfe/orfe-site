@@ -1,0 +1,1 @@
+:where(.stat-value){font-size:var(--fs-eq);font-weight:700;line-height:1}:where(.stat-caption){font-size:var(--fs-caption);margin-top:.25rem;font-weight:500;line-height:1.2}
