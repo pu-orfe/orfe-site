@@ -42,6 +42,46 @@ else
   fail "CNAME missing or not $EXPECTED_DOMAIN"
 fi
 
+# Hosted slide decks (static Slidev builds). Each deck is built with its
+# folder as the base path, so every asset it references must exist locally.
+deck_count=0
+# Paths that appear as plain strings in deck code but are never fetched.
+# /princeton-lockup.svg: the cover layout compares the logo setting against it
+# and swaps in the bundled, hashed copy under assets/.
+IGNORED_REFS="/princeton-lockup.svg"
+for deck_index in "$SITE_DIR"/assets/downloads/presentations/*/*/index.html; do
+  [ -f "$deck_index" ] || continue
+  deck_count=$((deck_count + 1))
+  deck_dir=$(dirname "$deck_index")
+  base="/${deck_dir#"$SITE_DIR"/}/"
+  name="${deck_dir#"$SITE_DIR"/}"
+
+  if grep -q "$base" "$deck_index"; then pass "$name: index.html uses its folder as base path"; else fail "$name: index.html does not reference $base"; fi
+
+  missing=0
+  checked=0
+  refs=$(grep -rhoE "[\"'\`(]/[A-Za-z0-9_./@-]+\.(js|css|svg|png|jpe?g|gif|webp|woff2?|mp4)" "$deck_dir" \
+    | cut -c2- | grep -v '^//' | sort -u)
+  for ref in $refs; do
+    case " $IGNORED_REFS " in *" $ref "*) continue ;; esac
+    case "$ref" in
+      "$base"*) local_path="$deck_dir/${ref#"$base"}" ;;
+      /assets/*) continue ;; # absolute path outside this deck; not ours
+      *) local_path="$deck_dir$ref" ;; # public/ asset resolved against base at runtime
+    esac
+    checked=$((checked + 1))
+    if [ ! -f "$local_path" ]; then echo "  missing: $ref"; missing=$((missing + 1)); fi
+  done
+  if [ "$checked" -eq 0 ]; then
+    fail "$name: found no asset references to check"
+  elif [ "$missing" -eq 0 ]; then
+    pass "$name: all $checked referenced assets exist"
+  else
+    fail "$name: $missing of $checked referenced assets are missing"
+  fi
+done
+if [ "$deck_count" -ge 1 ]; then pass "found $deck_count hosted deck(s)"; else fail "no hosted decks found"; fi
+
 echo "---"
 echo "$passed passed, $failed failed"
 if [ "$passed" -eq 0 ]; then echo "FAIL: no checks ran"; exit 1; fi
