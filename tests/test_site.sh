@@ -58,6 +58,12 @@ for deck_index in "$SITE_DIR"/assets/downloads/presentations/*/*/index.html; do
 
   if grep -q "$base" "$deck_index"; then pass "$name: index.html uses its folder as base path"; else fail "$name: index.html does not reference $base"; fi
 
+  if grep -q 'nav-hint\.js' "$deck_index" && grep -q 'nav-hint\.css' "$deck_index"; then
+    pass "$name: index.html loads the visible navigation controls"
+  else
+    fail "$name: index.html does not load nav-hint.js and nav-hint.css"
+  fi
+
   missing=0
   checked=0
   refs=$(grep -rhoE "[\"'\`(]/[A-Za-z0-9_./@-]+\.(js|css|svg|png|jpe?g|gif|webp|woff2?|mp4)" "$deck_dir" \
