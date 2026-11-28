@@ -1,0 +1,11 @@
+{
+  "name": "orfe-site-browser-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "playwright": "1.57.0"
+  }
+}

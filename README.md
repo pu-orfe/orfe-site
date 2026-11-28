@@ -8,6 +8,8 @@ Landing page for <https://www.orfe.princeton.edu>, published to GitHub Pages by
   (static Slidev builds, served at the same path on the site)
 - `tests/test_site.sh` – checks the page (HTML validity via tidy, required content, CNAME)
   and that every asset each hosted deck references exists
+- `tests/browser/` – drives each hosted deck in Chromium (Playwright) and checks the
+  navigation controls described below
 
 ## Add a slide deck
 
@@ -18,7 +20,9 @@ into that folder under `site/`. Then run the tests. They fail if any referenced 
 
 Slidev hides its own controls until the pointer moves near the bottom-left corner, so viewers often
 don't see that slides advance. Every hosted deck therefore loads `nav-hint.js` and `nav-hint.css`
-from its folder. These add previous/next buttons, a slide counter, and a short hint. Copy both files
+from its folder. These add previous/next buttons, a slide counter, and a short hint. Under the counter,
+one small mark per click animation shows the current slide's build steps. The marks fill in as builds
+are shown and pulse when a press advances a build instead of the slide. Copy both files
 from an existing deck, set `TOTAL` in `nav-hint.js` to the slide count, and add these lines before
 `</head>` in the deck's `index.html` (the tests check for them):
 
@@ -36,6 +40,15 @@ Current decks:
 
 ```sh
 docker-compose run --rm --build test
+docker-compose run --rm --build browser-test
 ```
+
+The browser tests can also run without Docker (Node 22 or later), using a local Google Chrome:
+
+```sh
+cd tests/browser && npm ci && CHROME_CHANNEL=chrome npm test
+```
+
+Without `CHROME_CHANNEL`, run `npx playwright install chromium` first.
 
 Pull requests run the tests only; pushes to `main` run the tests and then deploy.
