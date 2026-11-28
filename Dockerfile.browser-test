@@ -1,0 +1,11 @@
+# Browser tests for the hosted decks' navigation controls. The image version must match
+# the playwright version in tests/browser/package.json.
+FROM mcr.microsoft.com/playwright:v1.57.0-noble
+
+WORKDIR /app/tests/browser
+COPY tests/browser/package.json tests/browser/package-lock.json ./
+RUN npm ci
+COPY site/ /app/site/
+COPY tests/browser/*.mjs ./
+
+CMD ["npm", "test"]

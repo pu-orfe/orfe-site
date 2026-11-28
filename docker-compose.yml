@@ -3,3 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.test
+  browser-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.browser-test
+    ipc: host

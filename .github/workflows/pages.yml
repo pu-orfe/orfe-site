@@ -22,6 +22,10 @@ jobs:
         run: |
           docker build -f Dockerfile.test -t orfe-site-test .
           docker run --rm orfe-site-test
+      - name: Run browser tests in Docker
+        run: |
+          docker build -f Dockerfile.browser-test -t orfe-site-browser-test .
+          docker run --rm --ipc=host orfe-site-browser-test
 
   deploy:
     needs: test
