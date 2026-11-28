@@ -14,7 +14,25 @@
 #orfe-nav button:hover, #orfe-nav button:focus-visible { background: rgba(255, 255, 255, 0.18); outline: none; }
 #orfe-nav button[aria-label="Next"] { background: #e77500; }
 #orfe-nav button[aria-label="Next"]:hover, #orfe-nav button[aria-label="Next"]:focus-visible { background: #f58025; }
-#orfe-nav .orfe-count { min-width: 52px; text-align: center; font-variant-numeric: tabular-nums; }
+#orfe-nav .orfe-count {
+  min-width: 52px; text-align: center; font-variant-numeric: tabular-nums;
+  position: relative; align-self: stretch; display: flex; align-items: center; justify-content: center;
+}
+/* Build-step marks under the slide number: one per click animation, filled once shown.
+   They sit below the number so the number stays centered whether or not a slide has builds. */
+#orfe-nav .orfe-steps {
+  position: absolute; left: 50%; bottom: 3px; margin-left: -22px;
+  display: flex; justify-content: center; gap: 3px; width: 44px; height: 4px;
+}
+#orfe-nav:not(.orfe-has-steps) .orfe-steps { visibility: hidden; }
+#orfe-nav .orfe-steps i { flex: 1; max-width: 8px; border-radius: 2px; background: rgba(255, 255, 255, 0.28); }
+#orfe-nav .orfe-steps i.orfe-done { background: #e77500; }
+#orfe-nav .orfe-steps.orfe-pulse { animation: orfe-pulse 0.6s ease-out; }
+@keyframes orfe-pulse { 0% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { #orfe-nav .orfe-steps.orfe-pulse { animation: none; } }
+#orfe-nav .orfe-sr {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
 #orfe-hint {
   position: fixed; right: 16px; bottom: 72px; z-index: 1000; max-width: 260px;
   padding: 10px 14px; border-radius: 10px;
